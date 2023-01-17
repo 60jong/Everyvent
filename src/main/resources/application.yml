@@ -1,0 +1,25 @@
+server:
+  port: 9000
+
+spring:
+  profiles:
+    default: develop
+  datasource:
+    driver-class-name:
+    username:
+    password:
+    url:
+
+  jpa:
+    hibernate:
+      ddl-auto:
+    properties:
+      show-sql:
+      hibernate:
+        format_sql:
+
+logging:
+  level:
+    org.hibernate.SQL:
+    org.hibernate.type:
+
