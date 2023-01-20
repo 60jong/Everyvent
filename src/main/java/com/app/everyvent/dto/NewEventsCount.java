@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCrawlEventsRes {
+public class NewEventsCount {
     private Integer newEventCount;
 }

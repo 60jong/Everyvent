@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMemberSubscriptionsRes {
-    private Long memberId;
-    private List<String> airlineEnglishNames;
+public class AirlineIds {
+    private List<Long> airlineIds;
 }

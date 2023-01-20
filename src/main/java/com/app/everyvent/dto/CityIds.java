@@ -9,6 +9,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostMemberSubscriptionsReq {
-    private List<Long> airlineIds;
+public class CityIds {
+    private List<Long> cityIds;
 }

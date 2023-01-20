@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class PostAirlineRes {
+public class NewAirlineRes {
     private String koreanName;
     private String englishName;
     private String country;
 
-    public PostAirlineRes(Airline airline) {
+    public NewAirlineRes(Airline airline) {
         this.koreanName = airline.getKoreanName();
         this.englishName = airline.getEnglishName();
         this.country = airline.getCountry();

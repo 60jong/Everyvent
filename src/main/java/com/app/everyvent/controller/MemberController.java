@@ -23,15 +23,16 @@ public class MemberController {
 
     /**
      * 멤버 회원가입
-     * @param postMemberReq
+     * @param newMemberParam
      * @return
      */
-    @PostMapping("/new")
-    public PostMemberRes postMember(@RequestBody PostMemberReq postMemberReq) {
-        Member newMember = postMemberReq.toMember();
+    @PostMapping("")
+    public NewMemberRes postMember(@RequestBody NewMemberParam newMemberParam) {
+        Member newMember = newMemberParam.toMember();
         memberService.join(newMember);
 
-        return new PostMemberRes(newMember);
+        return new NewMemberRes(newMember);
+
     }
 
     /**
@@ -40,11 +41,11 @@ public class MemberController {
      * @return
      */
     @GetMapping("/{memberId}/subscriptions")
-    public GetMemberSubscriptionsRes getMemberSubscriptions(@PathVariable("memberId") Long memberId) {
+    public SubscribedAirlines getMemberSubscriptions(@PathVariable("memberId") Long memberId) {
         Member member = memberService.findOne(memberId);
         List<String> airlineEnglishNames = memberService.getAirlineEnglishNames(member);
 
-        return new GetMemberSubscriptionsRes(memberId, airlineEnglishNames);
+        return new SubscribedAirlines(memberId, airlineEnglishNames);
     }
 
     /**
@@ -54,7 +55,7 @@ public class MemberController {
      */
     @PostMapping("/{memberId}/subscriptions")
     public void postMemberSubscriptions(@PathVariable("memberId") Long memberId,
-                                        @RequestBody PostMemberSubscriptionsReq postMemberSubscriptionsReq) {
+                                        @RequestBody AirlineIds postMemberSubscriptionsReq) {
         List<Airline> airlines = airlineService.findAllById(
                 postMemberSubscriptionsReq.getAirlineIds());
         Member member = memberService.findOne(memberId);
@@ -68,7 +69,7 @@ public class MemberController {
      */
     @PostMapping("/{memberId}/destinations")
     public void postMemberDestinations(@PathVariable("memberId") Long memberId,
-                                       @RequestBody PostMemberDestinationsReq postMemberDestinationsReq) {
+                                       @RequestBody CityIds postMemberDestinationsReq) {
         List<City> cities = destinationService.findCities(postMemberDestinationsReq.getCityIds());
         Member member = memberService.findOne(memberId);
         memberService.setDestinations(member, cities);

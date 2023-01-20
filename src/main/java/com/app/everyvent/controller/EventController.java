@@ -1,7 +1,7 @@
 package com.app.everyvent.controller;
 
 import com.app.everyvent.domain.airline.Airline;
-import com.app.everyvent.dto.PostCrawlEventsRes;
+import com.app.everyvent.dto.NewEventsCount;
 import com.app.everyvent.service.AirlineService;
 import com.app.everyvent.service.EventService;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +18,10 @@ public class EventController {
     private final AirlineService airlineService;
 
     @PostMapping("/crawl/{airlineId}")
-    public PostCrawlEventsRes crawlEvents(@PathVariable("airlineId") Long airlineId) {
+    public NewEventsCount crawlEvents(@PathVariable("airlineId") Long airlineId) {
         Airline airline = airlineService.findById(airlineId);
         int newEventCount = eventService.crawl(airline);
 
-        return new PostCrawlEventsRes(newEventCount);
+        return new NewEventsCount(newEventCount);
     }
 }

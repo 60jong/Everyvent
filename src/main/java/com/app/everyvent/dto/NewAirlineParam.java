@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostAirlineReq {
+public class NewAirlineParam {
     private String koreanName;
     private String englishName;
     private String code;
