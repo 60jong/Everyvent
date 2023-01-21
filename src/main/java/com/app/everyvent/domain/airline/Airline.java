@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,6 +22,8 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "code")
 public abstract class Airline {
+    public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
+    public static String WEB_DRIVER_PATH = "chromedriver.exe";
 
     @Id
     @GeneratedValue
@@ -70,5 +75,21 @@ public abstract class Airline {
         this.subscriptions.add(subscription);
     }
 
-    public abstract List<Event> crawlEvents();
+    public WebDriver getWebDriver() {
+        // WebDriver 경로 설정
+        System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
+
+        // WebDriver 옵션 설정
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        options.addArguments("--disable-popup-blocking");
+
+        return new ChromeDriver(options);
+    }
+
+    public void waitPageLoad() throws InterruptedException {
+        Thread.sleep(2000);
+    }
+
+    public abstract List<Event> crawlEvents() throws InterruptedException;
 }
