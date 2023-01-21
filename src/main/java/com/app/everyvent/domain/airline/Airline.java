@@ -91,5 +91,10 @@ public abstract class Airline {
         Thread.sleep(2000);
     }
 
+    public void endCrawl(WebDriver driver) {
+        driver.close();
+        driver.quit();
+    }
+
     public abstract List<Event> crawlEvents() throws InterruptedException;
 }

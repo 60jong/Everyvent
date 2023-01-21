@@ -35,7 +35,7 @@ public class JejuAir extends Airline {
 
         List<Event> events = getEvents(driver);
 
-        driver.close();
+        super.endCrawl(driver);
 
         return events;
     }

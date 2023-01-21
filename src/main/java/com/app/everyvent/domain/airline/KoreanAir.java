@@ -40,7 +40,7 @@ public class KoreanAir extends Airline {
             events.addAll(getEvents(driver));
         }
 
-        driver.close();
+        super.endCrawl(driver);
 
         return events;
     }
