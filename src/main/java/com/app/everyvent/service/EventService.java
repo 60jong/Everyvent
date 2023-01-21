@@ -20,7 +20,12 @@ public class EventService {
     }
 
     public int crawl(Airline airline) {
-        List<Event> events = airline.crawlEvents();
+        List<Event> events = null;
+        try {
+            events = airline.crawlEvents();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return saveNew(events);
     }
 
