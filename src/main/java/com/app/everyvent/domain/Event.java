@@ -25,6 +25,8 @@ public class Event {
 
     private String url;
 
+    private String thumbnailUrl;
+
     private String text;
 
     private LocalDate startDate;
@@ -43,18 +45,16 @@ public class Event {
 
     // Constructor
     @Builder
-    public Event(Airline airline, String url, String text, LocalDate startDate, LocalDate endDate) {
+    public Event(Airline airline, String url, String thumbnailUrl,String text, LocalDate startDate, LocalDate endDate) {
         this.airline = airline;
         this.url = url;
+        this.thumbnailUrl = thumbnailUrl;
         this.text = text;
         this.startDate = startDate;
         this.endDate = endDate;
         this.airline.addEvent(this);
         setId();
     }
-
-
-    // Getter
 
     // Method
     public void setId() {
