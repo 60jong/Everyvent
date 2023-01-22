@@ -4,6 +4,7 @@ import com.app.everyvent.domain.Event;
 import com.app.everyvent.domain.Period;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -25,17 +26,16 @@ public class JejuAir extends Airline {
 
     @Override
     public List<Event> crawlEvents() throws InterruptedException {
-        WebDriver driver = super.getWebDriver();
+        WebDriver driver = getWebDriver();
         driver.get(JJA_EVENT_URL);
 
-        super.waitPageLoad();
+        waitPageLoad();
 
         clickMoreButtons(driver);
 
+        List<Event> events = extractEvents(driver);
 
-        List<Event> events = getEvents(driver);
-
-        super.endCrawl(driver);
+        endCrawl(driver);
 
         return events;
     }
@@ -45,14 +45,14 @@ public class JejuAir extends Airline {
             try {
                 WebElement more__button = driver.findElement(By.className("more__button"));
                 more__button.click();
-                super.waitPageLoad();
+                waitPageLoad();
             } catch (Exception e) {
                 break;
             }
         }
     }
 
-    public List<Event> getEvents(WebDriver driver) {
+    public List<Event> extractEvents(WebDriver driver) {
         List<Event> events = new ArrayList<>();
 
         List<WebElement> eventElements = driver.findElements(By.className("search-result__item"));
@@ -66,10 +66,19 @@ public class JejuAir extends Airline {
 
     public Event makeEvent(WebElement element) {
         String eventUrl = element.findElement(By.tagName("a")).getAttribute("href");
+        String thumbnailUrl = getThumbnailImgUrl(element);
         String eventText = getEventText(element);
-        Period period = getPeriod(element);
+        Period period = getEventPeriod(element);
 
-        return new Event(this, eventUrl, eventText, period.getStartDate(), period.getEndDate());
+        return new Event(this, eventUrl, thumbnailUrl, eventText, period.getStartDate(), period.getEndDate());
+    }
+
+    public String getThumbnailImgUrl(WebElement element) {
+        String thumbnailUrlElement = element.findElement(
+                By.className("event-banner-item"))
+                .getAttribute("style");
+
+        return thumbnailUrlElement.split("\"")[1];
     }
 
     public String getEventText(WebElement element) {
@@ -78,7 +87,7 @@ public class JejuAir extends Airline {
         return eventText + " " + eventTitle;
     }
 
-    public Period getPeriod(WebElement element) {
+    public Period getEventPeriod(WebElement element) {
         // "yyyy.MM.dd ~ yyyy.MM.dd" 형식
         String period = element.findElement(By.className("event-banner__date")).getText();
 
