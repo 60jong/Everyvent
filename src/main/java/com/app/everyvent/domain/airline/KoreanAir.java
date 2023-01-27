@@ -1,7 +1,7 @@
 package com.app.everyvent.domain.airline;
 
 import com.app.everyvent.domain.Event;
-import com.app.everyvent.domain.Period;
+import com.app.everyvent.dto.EventPeriod;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -76,12 +76,12 @@ public class KoreanAir extends Airline {
         String eventUrl = element.findElement(By.tagName("a")).getAttribute("href");
         String thumbnailUrl = element.findElement(By.className("-img__pc")).getAttribute("src");
         String eventText = element.findElement(By.cssSelector("p.landing__txt")).getText();
-        Period period = getPeriod(element);
+        EventPeriod period = getPeriod(element);
 
         return new Event(this, eventUrl, thumbnailUrl, eventText, period.getStartDate(), period.getEndDate());
     }
 
-    public Period getPeriod(WebElement element) {
+    public EventPeriod getPeriod(WebElement element) {
         // "yyyy.MM.dd. ~ yyyy.MM.dd." 형식
         String period = element.findElement(By.cssSelector("p.landing__date")).getText();
 
@@ -96,6 +96,6 @@ public class KoreanAir extends Airline {
                         .substring(0, 10)
                         .replaceAll("[.]","-"));
 
-        return new Period(startDate, endDate);
+        return new EventPeriod(startDate, endDate);
     }
 }

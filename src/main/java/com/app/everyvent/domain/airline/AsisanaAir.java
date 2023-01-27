@@ -1,7 +1,7 @@
 package com.app.everyvent.domain.airline;
 
 import com.app.everyvent.domain.Event;
-import com.app.everyvent.domain.Period;
+import com.app.everyvent.dto.EventPeriod;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -68,12 +68,12 @@ public class AsisanaAir extends Airline {
                         By.className("title"))
                 .getText();
 
-        Period eventPeriod = getEventPeriod(eventBox);
+        EventPeriod eventPeriod = getEventPeriod(eventBox);
 
         return new Event(this, eventUrl, thumbnailUrl, eventText, eventPeriod.getStartDate(), eventPeriod.getEndDate());
     }
 
-    public Period getEventPeriod(WebElement element) {
+    public EventPeriod getEventPeriod(WebElement element) {
         // "yyyy.MM.dd ~ yyyy.MM.dd" 형식
         String period = element.findElement(By.className("date")).getText();
 
@@ -87,6 +87,6 @@ public class AsisanaAir extends Airline {
                         .trim()
                         .replaceAll("[.]","-"));
 
-        return new Period(startDate, endDate);
+        return new EventPeriod(startDate, endDate);
     }
 }

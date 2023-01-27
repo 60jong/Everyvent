@@ -1,10 +1,9 @@
 package com.app.everyvent.domain.airline;
 
 import com.app.everyvent.domain.Event;
-import com.app.everyvent.domain.Period;
+import com.app.everyvent.dto.EventPeriod;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -40,15 +39,11 @@ public class JejuAir extends Airline {
         return events;
     }
 
-    private void clickMoreButtons(WebDriver driver) {
+    private void clickMoreButtons(WebDriver driver) throws InterruptedException {
         while (true) {
-            try {
-                WebElement more__button = driver.findElement(By.className("more__button"));
-                more__button.click();
-                waitPageLoad();
-            } catch (Exception e) {
-                break;
-            }
+            WebElement more__button = driver.findElement(By.className("more__button"));
+            more__button.click();
+            waitPageLoad();
         }
     }
 
@@ -68,7 +63,7 @@ public class JejuAir extends Airline {
         String eventUrl = element.findElement(By.tagName("a")).getAttribute("href");
         String thumbnailUrl = getThumbnailImgUrl(element);
         String eventText = getEventText(element);
-        Period period = getEventPeriod(element);
+        EventPeriod period = getEventPeriod(element);
 
         return new Event(this, eventUrl, thumbnailUrl, eventText, period.getStartDate(), period.getEndDate());
     }
@@ -87,7 +82,7 @@ public class JejuAir extends Airline {
         return eventText + " " + eventTitle;
     }
 
-    public Period getEventPeriod(WebElement element) {
+    public EventPeriod getEventPeriod(WebElement element) {
         // "yyyy.MM.dd ~ yyyy.MM.dd" 형식
         String period = element.findElement(By.className("event-banner__date")).getText();
 
@@ -101,7 +96,7 @@ public class JejuAir extends Airline {
                         .trim()
                         .replaceAll("[.]","-"));
 
-        return new Period(startDate, endDate);
+        return new EventPeriod(startDate, endDate);
     }
 
 }
