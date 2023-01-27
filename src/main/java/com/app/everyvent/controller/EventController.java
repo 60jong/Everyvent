@@ -1,7 +1,7 @@
 package com.app.everyvent.controller;
 
 import com.app.everyvent.domain.airline.Airline;
-import com.app.everyvent.dto.NewEventsCount;
+import com.app.everyvent.dto.web.NewEventsCount;
 import com.app.everyvent.service.AirlineService;
 import com.app.everyvent.service.EventService;
 import lombok.RequiredArgsConstructor;
