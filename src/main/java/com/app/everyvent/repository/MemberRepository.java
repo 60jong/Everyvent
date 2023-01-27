@@ -1,6 +1,5 @@
 package com.app.everyvent.repository;
 
-import com.app.everyvent.domain.destination.Destination;
 import com.app.everyvent.domain.Member;
 import com.app.everyvent.domain.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +29,5 @@ public class MemberRepository {
         return em.createQuery("select s from Subscription s where s.member = :member")
                 .setParameter("member", member)
                 .getResultList();
-    }
-
-    public void saveDestination(Destination destination) {
     }
 }
