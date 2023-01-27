@@ -4,6 +4,7 @@ import com.app.everyvent.domain.Event;
 import com.app.everyvent.dto.EventPeriod;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -41,9 +42,14 @@ public class JejuAir extends Airline {
 
     private void clickMoreButtons(WebDriver driver) throws InterruptedException {
         while (true) {
-            WebElement more__button = driver.findElement(By.className("more__button"));
-            more__button.click();
-            waitPageLoad();
+            try {
+                WebElement more__button = driver.findElement(By.className("more__button"));
+                more__button.click();
+                waitPageLoad();
+            } catch (NoSuchElementException exception) {
+                // '더보기' 버튼이 없다면 반복문 탈출
+                break;
+            }
         }
     }
 
