@@ -3,6 +3,7 @@ package com.app.everyvent.repository;
 import com.app.everyvent.domain.destination.City;
 import com.app.everyvent.domain.destination.Continent;
 import com.app.everyvent.domain.destination.Country;
+import com.app.everyvent.domain.destination.Destination;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,18 +15,8 @@ public class DestinationRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public List<Continent> findAllContinents() {
-        return em.createQuery("select c from Continent c", Continent.class)
-                .getResultList();
-    }
-
-    public List<Country> findAllCountries() {
-        return em.createQuery("select c from Country c", Country.class)
-                .getResultList();
-    }
-
-    public List<City> findAllCities() {
-        return em.createQuery("select c from City c", City.class)
+    public List<Destination> findAll() {
+        return em.createQuery("select d from Destination d", Destination.class)
                 .getResultList();
     }
 }

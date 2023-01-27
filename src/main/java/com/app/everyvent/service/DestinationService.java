@@ -1,37 +1,45 @@
 package com.app.everyvent.service;
 
-import com.app.everyvent.domain.destination.City;
-import com.app.everyvent.domain.destination.Continent;
-import com.app.everyvent.domain.destination.Country;
+import com.app.everyvent.domain.destination.Destination;
 import com.app.everyvent.repository.DestinationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class DestinationService {
     private final DestinationRepository destinationRepository;
 
     public boolean canFindDestinationIn(String text) {
         String uppercaseText = text.toUpperCase();
 
-        List<Continent> continents = destinationRepository.findAllContinents();
-        List<Country> countries = destinationRepository.findAllCountries();
-        List<City> cities = destinationRepository.findAllCities();
+        List<Destination> allDestinations = destinationRepository.findAll();
+        List<String> allDestinationNames = getAllDestinationNames(allDestinations);
 
-        return (continents.stream()
-                .filter(continent -> uppercaseText.contains(continent.getEnglishName())
-                        || uppercaseText.contains(continent.getKoreanName()))
-                .count()
-                + countries.stream()
-                .filter(country -> uppercaseText.contains(country.getEnglishName())
-                        || uppercaseText.contains(country.getKoreanName()))
-                .count()
-                + cities.stream()
-                .filter(city -> uppercaseText.contains(city.getEnglishName())
-                        || uppercaseText.contains(city.getKoreanName()))
-                .count()) > 0;
+        return allDestinationNames.stream()
+                .filter(destinationName -> uppercaseText.contains(destinationName))
+                .count() > 0;
+    }
+
+    public List<String> getAllDestinationNames(List<Destination> destinations) {
+        List<String> allDestinationNames = new ArrayList<>();
+
+        for (Destination destination : destinations) {
+            allDestinationNames.addAll(destination.getDestinationNames());
+        }
+
+        return allDestinationNames;
+    }
+
+    public List<Destination> findDestinationsIn(String text) {
+        String uppercaseText = text.toUpperCase();
+
+        List<Destination> allDestinations = destinationRepository.findAll();
+        return allDestinations.stream()
+                .filter(destination -> destination.isContainedIn(uppercaseText))
+                .collect(Collectors.toList());
     }
 }
