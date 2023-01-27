@@ -1,5 +1,6 @@
 package com.app.everyvent.domain;
 
+
 import com.app.everyvent.domain.airline.Airline;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -29,6 +32,12 @@ public class Event {
 
     private String text;
 
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
+
+    @OneToMany(mappedBy = "event")
+    private List<EventDestination> eventDestinations = new ArrayList<>();
+
     private LocalDate startDate;
 
     private LocalDate endDate;
@@ -43,9 +52,14 @@ public class Event {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    /*---Setter---*/
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
+
     // Constructor
     @Builder
-    public Event(Airline airline, String url, String thumbnailUrl,String text, LocalDate startDate, LocalDate endDate) {
+    public Event(Airline airline, String url, String thumbnailUrl, String text, LocalDate startDate, LocalDate endDate) {
         this.airline = airline;
         this.url = url;
         this.thumbnailUrl = thumbnailUrl;
@@ -59,5 +73,13 @@ public class Event {
     // Method
     public void setId() {
         this.id = Long.valueOf(this.url.hashCode());
+    }
+
+    public void addEventDestinations(List<EventDestination> eventDestinations) {
+        this.eventDestinations.addAll(eventDestinations);
+    }
+
+    public boolean isTypeOf(EventType eventType) {
+        return this.eventType.equals(eventType);
     }
 }
