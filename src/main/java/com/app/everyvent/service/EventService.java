@@ -1,8 +1,10 @@
 package com.app.everyvent.service;
 
 import com.app.everyvent.domain.Event;
+import com.app.everyvent.domain.EventDestination;
 import com.app.everyvent.domain.EventType;
 import com.app.everyvent.domain.airline.Airline;
+import com.app.everyvent.domain.destination.Destination;
 import com.app.everyvent.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.List;
 public class EventService {
     private final EventRepository eventRepository;
     private final DestinationService destinationService;
+    private final EventDestinationService eventDestinationService;
 
     public void save(Event event) {
         eventRepository.save(event);
@@ -27,22 +30,11 @@ public class EventService {
 
         try {
             events = airline.crawlEvents();
-            events.stream()
-                    .forEach(event -> setEventType(event));
         } catch (InterruptedException e) {
+            // Crawl 시에 Thread.sleep() 예외 처리
             e.printStackTrace();
         }
         return saveNew(events);
-    }
-
-    public void setEventType(Event event) {
-        EventType eventType = EventType.ETC;
-
-        if (destinationService.canFindDestinationIn(event.getText())) {
-            eventType = EventType.TRAVEL;
-        }
-
-        event.setEventType(eventType);
     }
 
     public int saveNew(List<Event> events) {
@@ -50,6 +42,14 @@ public class EventService {
         for (Event event : events) {
             if (has(event)) {
                 continue;
+            }
+            setEventType(event);
+
+            if (event.isTypeOf(EventType.TRAVEL)) {
+                List<Destination> destinations = destinationService.findDestinationsIn(event.getText());
+
+                destinations.stream()
+                        .forEach(destination -> eventDestinationService.save(new EventDestination(event, destination)));
             }
             save(event);
             newEvents++;
@@ -64,5 +64,15 @@ public class EventService {
         }
 
         return false;
+    }
+
+    public void setEventType(Event event) {
+        EventType eventType = EventType.ETC;
+
+        if (destinationService.canFindDestinationIn(event.getText())) {
+            eventType = EventType.TRAVEL;
+        }
+
+        event.setEventType(eventType);
     }
 }
