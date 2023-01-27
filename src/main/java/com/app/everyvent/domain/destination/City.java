@@ -15,11 +15,11 @@ public class City {
 
     private String koreanName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "continent_id")
     private Continent continent;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "country_id")
     private Country country;
 }

@@ -1,6 +1,5 @@
 package com.app.everyvent.domain;
 
-import com.app.everyvent.domain.destination.Destination;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -31,7 +30,7 @@ public class Member {
     private List<Subscription> subscriptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<Destination> destinations = new ArrayList<>();
+    private List<MemberDestination> destinations = new ArrayList<>();
 
     private Integer status = 1;
 
@@ -81,9 +80,5 @@ public class Member {
 
     public void subscribe(Subscription subscription) {
         this.subscriptions.add(subscription);
-    }
-
-    public void addDestination(Destination destination) {
-        destinations.add(destination);
     }
 }

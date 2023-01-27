@@ -75,8 +75,8 @@ public class Event {
         this.id = Long.valueOf(this.url.hashCode());
     }
 
-    public void addEventDestinations(List<EventDestination> eventDestinations) {
-        this.eventDestinations.addAll(eventDestinations);
+    public void addEventDestination(EventDestination eventDestination) {
+        this.eventDestinations.add(eventDestination);
     }
 
     public boolean isTypeOf(EventType eventType) {

@@ -1,35 +1,30 @@
 package com.app.everyvent.domain;
 
 import com.app.everyvent.domain.destination.Destination;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
 @Entity
 public class EventDestination {
-
     @Id @GeneratedValue
+    @Column(name = "event_destination_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "destination_id")
     private Destination destination;
 
-    private String continent;
-
-    private String country;
-
-    private String city;
-
     /*---Constructor---*/
-    public EventDestination(Event event, Destination destination, String continent, String country, String city) {
+    public EventDestination(Event event, Destination destination) {
         this.event = event;
+        event.addEventDestination(this);
         this.destination = destination;
-        this.continent = continent;
-        this.country = country;
-        this.city = city;
+        destination.addEventDestination(this);
     }
 }
