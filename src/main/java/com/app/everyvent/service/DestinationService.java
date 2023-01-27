@@ -1,28 +1,45 @@
 package com.app.everyvent.service;
 
-import com.app.everyvent.domain.destination.City;
-import com.app.everyvent.repository.CityRepository;
+import com.app.everyvent.domain.destination.Destination;
+import com.app.everyvent.repository.DestinationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class DestinationService {
-    private final CityRepository cityRepository;
+    private final DestinationRepository destinationRepository;
 
-    public City findCity(Long cityId) {
-        return cityRepository.findOne(cityId);
+    public boolean canFindDestinationIn(String text) {
+        String uppercaseText = text.toUpperCase();
+
+        List<Destination> allDestinations = destinationRepository.findAll();
+        List<String> allDestinationNames = getAllDestinationNames(allDestinations);
+
+        return allDestinationNames.stream()
+                .filter(destinationName -> uppercaseText.contains(destinationName))
+                .count() > 0;
     }
 
-    public List<City> findCities(List<Long> cityIds) {
-        List<City> cities = new ArrayList<>();
-        for (Long cityId : cityIds) {
-            cities.add(cityRepository.findOne(cityId));
+    public List<String> getAllDestinationNames(List<Destination> destinations) {
+        List<String> allDestinationNames = new ArrayList<>();
+
+        for (Destination destination : destinations) {
+            allDestinationNames.addAll(destination.getDestinationNames());
         }
 
-        return cities;
+        return allDestinationNames;
+    }
+
+    public List<Destination> findDestinationsIn(String text) {
+        String uppercaseText = text.toUpperCase();
+
+        List<Destination> allDestinations = destinationRepository.findAll();
+        return allDestinations.stream()
+                .filter(destination -> destination.isContainedIn(uppercaseText))
+                .collect(Collectors.toList());
     }
 }

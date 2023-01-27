@@ -1,7 +1,7 @@
 package com.app.everyvent.domain.airline;
 
 import com.app.everyvent.domain.Event;
-import com.app.everyvent.domain.Period;
+import com.app.everyvent.dto.EventPeriod;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -29,18 +29,18 @@ public class KoreanAir extends Airline {
         WebDriver driver = super.getWebDriver();
         driver.get(KAL_EVENT_URL);
 
-        super.waitPageLoad();
+        waitPageLoad();
 
         // '1' 페이지 이벤트 crawl
-        List<Event> events = getEvents(driver);
+        List<Event> events = extractEvents(driver);
 
         // 다음 페이지가 없을 때까지, 클릭 후 crawl
         while (hasNextEventPage(driver)) {
             clickNextPageButton(driver);
-            events.addAll(getEvents(driver));
+            events.addAll(extractEvents(driver));
         }
 
-        super.endCrawl(driver);
+        endCrawl(driver);
 
         return events;
     }
@@ -57,10 +57,10 @@ public class KoreanAir extends Airline {
     private void clickNextPageButton(WebDriver driver) throws InterruptedException {
         WebElement nextPageButton = driver.findElement(By.cssSelector("pagination__item.-ctrl.-next"));
         nextPageButton.click();
-        super.waitPageLoad();
+        waitPageLoad();
     }
 
-    public List<Event> getEvents(WebDriver driver) {
+    public List<Event> extractEvents(WebDriver driver) {
         List<Event> events = new ArrayList<>();
 
         List<WebElement> elements = driver.findElements(By.className("landing__item"));
@@ -74,13 +74,14 @@ public class KoreanAir extends Airline {
 
     public Event makeEvent(WebElement element) {
         String eventUrl = element.findElement(By.tagName("a")).getAttribute("href");
+        String thumbnailUrl = element.findElement(By.className("-img__pc")).getAttribute("src");
         String eventText = element.findElement(By.cssSelector("p.landing__txt")).getText();
-        Period period = getPeriod(element);
+        EventPeriod period = getPeriod(element);
 
-        return new Event(this, eventUrl, eventText, period.getStartDate(), period.getEndDate());
+        return new Event(this, eventUrl, thumbnailUrl, eventText, period.getStartDate(), period.getEndDate());
     }
 
-    public Period getPeriod(WebElement element) {
+    public EventPeriod getPeriod(WebElement element) {
         // "yyyy.MM.dd. ~ yyyy.MM.dd." 형식
         String period = element.findElement(By.cssSelector("p.landing__date")).getText();
 
@@ -95,6 +96,6 @@ public class KoreanAir extends Airline {
                         .substring(0, 10)
                         .replaceAll("[.]","-"));
 
-        return new Period(startDate, endDate);
+        return new EventPeriod(startDate, endDate);
     }
 }

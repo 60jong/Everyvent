@@ -1,4 +1,4 @@
-package com.app.everyvent.dto;
+package com.app.everyvent.dto.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubscribedAirlines {
-    private Long memberId;
-    private List<String> airlineEnglishNames;
+public class CityIds {
+    private List<Long> cityIds;
 }

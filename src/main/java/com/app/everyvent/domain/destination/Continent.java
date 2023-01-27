@@ -8,19 +8,18 @@ import java.util.List;
 
 @Getter
 @Entity
-public class Country {
+public class Continent {
     @Id @GeneratedValue
-    @Column(name = "country_id")
+    @Column(name = "continent_id")
     private Long id;
 
     private String englishName;
 
     private String koreanName;
 
-    @ManyToOne
-    @JoinColumn(name = "continent_id")
-    private Continent continent;
+    @OneToMany(mappedBy = "continent")
+    private List<Country> countries = new ArrayList<>();
 
-    @OneToMany(mappedBy = "country")
+    @OneToMany(mappedBy = "continent")
     private List<City> cities = new ArrayList<>();
 }

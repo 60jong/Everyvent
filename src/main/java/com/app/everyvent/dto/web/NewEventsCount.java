@@ -1,14 +1,12 @@
-package com.app.everyvent.dto;
+package com.app.everyvent.dto.web;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AirlineIds {
-    private List<Long> airlineIds;
+public class NewEventsCount {
+    private Integer newEventCount;
 }

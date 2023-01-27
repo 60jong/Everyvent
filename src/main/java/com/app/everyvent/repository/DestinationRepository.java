@@ -1,17 +1,22 @@
 package com.app.everyvent.repository;
 
+import com.app.everyvent.domain.destination.City;
+import com.app.everyvent.domain.destination.Continent;
+import com.app.everyvent.domain.destination.Country;
 import com.app.everyvent.domain.destination.Destination;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 public class DestinationRepository {
-    @Autowired
+    @PersistenceContext
     private EntityManager em;
 
-    public void save(Destination destination) {
-        em.persist(destination);
+    public List<Destination> findAll() {
+        return em.createQuery("select d from Destination d", Destination.class)
+                .getResultList();
     }
 }

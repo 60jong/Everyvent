@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    default: develop
+    active: develop
   datasource:
     driver-class-name:
     username:

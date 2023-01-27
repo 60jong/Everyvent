@@ -1,10 +1,8 @@
 package com.app.everyvent.controller;
 
 import com.app.everyvent.domain.airline.Airline;
-import com.app.everyvent.dto.*;
+import com.app.everyvent.dto.web.*;
 import com.app.everyvent.service.AirlineService;
-import com.app.everyvent.domain.destination.City;
-import com.app.everyvent.service.DestinationService;
 import com.app.everyvent.domain.Member;
 import com.app.everyvent.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,6 @@ public class MemberController {
 
     private final MemberService memberService;
     private final AirlineService airlineService;
-    private final DestinationService destinationService;
 
     /**
      * 멤버 회원가입
@@ -67,11 +64,5 @@ public class MemberController {
      * @param memberId
      * @param postMemberDestinationsReq
      */
-    @PostMapping("/{memberId}/destinations")
-    public void postMemberDestinations(@PathVariable("memberId") Long memberId,
-                                       @RequestBody CityIds postMemberDestinationsReq) {
-        List<City> cities = destinationService.findCities(postMemberDestinationsReq.getCityIds());
-        Member member = memberService.findOne(memberId);
-        memberService.setDestinations(member, cities);
-    }
+
 }

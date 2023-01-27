@@ -1,8 +1,8 @@
 package com.app.everyvent.controller;
 
 import com.app.everyvent.domain.airline.Airline;
-import com.app.everyvent.dto.NewAirlineParam;
-import com.app.everyvent.dto.NewAirlineRes;
+import com.app.everyvent.dto.web.NewAirlineParam;
+import com.app.everyvent.dto.web.NewAirlineRes;
 import com.app.everyvent.service.AirlineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

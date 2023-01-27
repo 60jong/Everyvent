@@ -1,4 +1,4 @@
-package com.app.everyvent.dto;
+package com.app.everyvent.dto.web;
 
 import com.app.everyvent.domain.airline.*;
 import lombok.AllArgsConstructor;
