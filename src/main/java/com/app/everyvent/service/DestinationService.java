@@ -13,6 +13,12 @@ import java.util.stream.Collectors;
 public class DestinationService {
     private final DestinationRepository destinationRepository;
 
+    public List<Destination> findAllById(List<Long> destinationIds) {
+        return destinationIds.stream()
+                .map(destinationId -> destinationRepository.findById(destinationId))
+                .collect(Collectors.toList());
+    }
+
     public boolean canFindDestinationIn(String text) {
         String uppercaseText = text.toUpperCase();
 

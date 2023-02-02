@@ -35,7 +35,7 @@ public class Event {
     @Enumerated(EnumType.STRING)
     private EventType eventType;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<EventDestination> eventDestinations = new ArrayList<>();
 
     private LocalDate startDate;

@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EventController {
     private final EventService eventService;
-    private final AirlineService airlineService;
 
     @PostMapping("/crawl")
     public NewEventsCount crawlEvents(@RequestParam("airline_id") Long airlineId) {
-        Airline airline = airlineService.findById(airlineId);
-        int newEventCount = eventService.crawl(airline);
+        int newEventCount = eventService.crawl(airlineId);
 
         return new NewEventsCount(newEventCount);
     }

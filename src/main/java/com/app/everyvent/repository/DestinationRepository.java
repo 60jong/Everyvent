@@ -19,4 +19,8 @@ public class DestinationRepository {
         return em.createQuery("select d from Destination d", Destination.class)
                 .getResultList();
     }
+
+    public Destination findById(Long destinationId) {
+        return em.find(Destination.class, destinationId);
+    }
 }
