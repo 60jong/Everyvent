@@ -26,10 +26,10 @@ public class Member {
 
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Subscription> subscriptions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberDestination> destinations = new ArrayList<>();
 
     private Integer status = 1;
@@ -80,5 +80,9 @@ public class Member {
 
     public void subscribe(Subscription subscription) {
         this.subscriptions.add(subscription);
+    }
+
+    public void addMemberDestination(MemberDestination memberDestination) {
+        this.destinations.add(memberDestination);
     }
 }

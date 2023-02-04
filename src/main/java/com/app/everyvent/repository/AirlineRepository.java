@@ -17,8 +17,6 @@ public class AirlineRepository {
     }
 
     public Airline findById(Long airlineId) {
-        return em.createQuery("select a from Airline a where a.id = :airlineId", Airline.class)
-                .setParameter("airlineId", airlineId)
-                .getSingleResult();
+        return em.find(Airline.class, airlineId);
     }
 }

@@ -17,7 +17,7 @@ public class Country {
 
     private String koreanName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "continent_id")
     private Continent continent;
 

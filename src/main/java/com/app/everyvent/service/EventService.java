@@ -18,6 +18,7 @@ import java.util.List;
 @Transactional
 public class EventService {
     private final EventRepository eventRepository;
+    private final AirlineService airlineService;
     private final DestinationService destinationService;
     private final EventDestinationService eventDestinationService;
 
@@ -25,7 +26,9 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    public int crawl(Airline airline) {
+    public int crawl(Long airlineId) {
+        Airline airline = airlineService.findById(airlineId);
+
         List<Event> events = Collections.emptyList();
 
         try {
@@ -40,7 +43,7 @@ public class EventService {
     public int saveNew(List<Event> events) {
         int newEvents = 0;
         for (Event event : events) {
-            if (has(event)) {
+            if (this.has(event)) {
                 continue;
             }
             setEventType(event);
@@ -49,7 +52,7 @@ public class EventService {
                 List<Destination> destinations = destinationService.findDestinationsIn(event.getText());
 
                 destinations.stream()
-                        .forEach(destination -> eventDestinationService.save(new EventDestination(event, destination)));
+                        .forEach(destination -> new EventDestination(event, destination));
             }
             save(event);
             newEvents++;

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +21,9 @@ public class AirlineService {
     }
 
     public List<Airline> findAllById(List<Long> airlineIds) {
-        List<Airline> airlines = new ArrayList<>();
-        for (Long airlineId : airlineIds) {
-            airlines.add(findById(airlineId));
-        }
-
-        return airlines;
+        return airlineIds.stream()
+                .map(airlineId -> airlineRepository.findById(airlineId))
+                .collect(Collectors.toList());
     }
 
     public Airline findById(Long airlineId) {

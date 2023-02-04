@@ -35,20 +35,11 @@ public class Subscription {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // 메서드
+    /*---Constructor---*/
     public Subscription(Member member, Airline airline) {
         this.member = member;
+        member.subscribe(this);
         this.airline = airline;
+        airline.addSubscription(this);
     }
-
-    public static Subscription subscribe(Member member, Airline airline) {
-        return new Subscription(member, airline);
-    }
-
-    public void register() {
-        this.member.subscribe(this);
-        this.airline.addSubscription(this);
-    }
-
-
 }

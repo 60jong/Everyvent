@@ -1,13 +1,18 @@
 package com.app.everyvent.controller;
 
-import com.app.everyvent.domain.airline.Airline;
+import com.app.everyvent.dto.web.DestinationIds;
 import com.app.everyvent.dto.web.*;
-import com.app.everyvent.service.AirlineService;
 import com.app.everyvent.domain.Member;
 import com.app.everyvent.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -16,10 +21,10 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-    private final AirlineService airlineService;
 
     /**
      * 멤버 회원가입
+     *
      * @param newMemberParam
      * @return
      */
@@ -34,6 +39,7 @@ public class MemberController {
 
     /**
      * 멤버의 구독 항공사 이름 조회
+     *
      * @param memberId
      * @return
      */
@@ -47,22 +53,31 @@ public class MemberController {
 
     /**
      * 멤버 구독 항공사 추가
+     *
      * @param memberId
-     * @param postMemberSubscriptionsReq
+     * @param airlineIds
      */
     @PostMapping("/{memberId}/subscriptions")
-    public void postMemberSubscriptions(@PathVariable("memberId") Long memberId,
-                                        @RequestBody AirlineIds postMemberSubscriptionsReq) {
-        List<Airline> airlines = airlineService.findAllById(
-                postMemberSubscriptionsReq.getAirlineIds());
-        Member member = memberService.findOne(memberId);
-        memberService.subscribe(member, airlines);
+    public void postMemberSubscriptions(@PathVariable("memberId") Long memberId, @RequestBody AirlineIds airlineIds) {
+        memberService.subscribe(memberId, airlineIds.getAirlineIds());
     }
 
     /**
      * 멤버 여행지 추가
+     *
      * @param memberId
-     * @param postMemberDestinationsReq
+     * @param destinationIds
      */
+    @PostMapping("/{memberId}/destinations")
+    public void postMemberDestinations(@PathVariable("memberId") Long memberId, @RequestBody DestinationIds destinationIds) {
+        memberService.addDestinations(memberId, destinationIds.getDestinationIds());
+    }
 
+    @GetMapping(value = "/get-image",
+            produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getImage() throws IOException {
+        InputStream inputStream = new FileInputStream("src/main/resources/tobi.jpg");
+
+        return IOUtils.toByteArray(inputStream);
+    }
 }
