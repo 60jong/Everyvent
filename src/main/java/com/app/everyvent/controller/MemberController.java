@@ -5,7 +5,14 @@ import com.app.everyvent.dto.web.*;
 import com.app.everyvent.domain.Member;
 import com.app.everyvent.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -66,6 +73,11 @@ public class MemberController {
         memberService.addDestinations(memberId, destinationIds.getDestinationIds());
     }
 
+    @GetMapping(value = "/get-image",
+            produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] getImage() throws IOException {
+        InputStream inputStream = new FileInputStream("src/main/resources/tobi.jpg");
 
-
+        return IOUtils.toByteArray(inputStream);
+    }
 }
