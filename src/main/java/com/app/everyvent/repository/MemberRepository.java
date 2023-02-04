@@ -26,7 +26,7 @@ public class MemberRepository {
     }
 
     public List<Subscription> findSubscriptions(Member member) {
-        return em.createQuery("select s from Subscription s where s.member = :member")
+        return em.createQuery("select s from Subscription s where s.member = :member", Subscription.class)
                 .setParameter("member", member)
                 .getResultList();
     }

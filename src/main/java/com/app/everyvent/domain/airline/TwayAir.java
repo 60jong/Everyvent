@@ -72,9 +72,7 @@ public class TwayAir extends Airline {
     }
 
     public Event makeEvent(WebElement eventBox) {
-        String eventUrl = eventBox.findElement(
-                        By.tagName("a"))
-                .getAttribute("href");
+        String eventUrl = getEventUrl(eventBox);
 
         String thumbnailUrl = eventBox.findElement(
                         By.className("img"))
@@ -89,6 +87,23 @@ public class TwayAir extends Airline {
         EventPeriod eventPeriod = getEventPeriod(eventBox);
 
         return new Event(this, eventUrl, thumbnailUrl, eventText, eventPeriod.getStartDate(), eventPeriod.getEndDate());
+    }
+
+    public String getEventUrl(WebElement eventBox) {
+        String eventUrl = eventBox.findElement(
+                        By.tagName("a"))
+                .getAttribute("href");
+
+        return formatEventUrl(eventUrl);
+    }
+
+    private String formatEventUrl(String eventUrl) {
+        // javascript:showEventContent('dXsebZcOowtYYUFR3jD66g==','being') 형식
+        // -> ~/event/retrieve/dXsebZcOowtYYUFR3jD66g==/being/n?
+        String retrievePath = eventUrl.split("[']")[1];
+        String retrieveEndPoint = eventUrl.split("[']")[3];
+
+        return "https://www.twayair.com/app/promotion/event/retrieve/" + retrievePath + "/" + retrieveEndPoint + "/n?";
     }
 
     public EventPeriod getEventPeriod(WebElement element) {
