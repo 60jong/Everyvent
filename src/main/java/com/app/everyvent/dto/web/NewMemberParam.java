@@ -14,8 +14,4 @@ public class NewMemberParam {
     private String password;
     private String phoneNumber;
     private Boolean mailNotificationEnable;
-
-    public Member toMember() {
-        return new Member(name, email, password, phoneNumber);
-    }
 }

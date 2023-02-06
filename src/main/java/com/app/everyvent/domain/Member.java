@@ -1,5 +1,6 @@
 package com.app.everyvent.domain;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
 @Entity
 @NoArgsConstructor
 public class Member {
@@ -25,6 +27,8 @@ public class Member {
     private String password;
 
     private String phoneNumber;
+
+    private Boolean mailNotificationEnable;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Subscription> subscriptions = new ArrayList<>();
@@ -43,32 +47,12 @@ public class Member {
     private LocalDateTime updatedAt;
 
     // Constructor
-    public Member(String name, String email, String password, String phoneNumber) {
+    public Member(String name, String email, String password, String phoneNumber, Boolean mailNotificationEnable) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-    }
-
-    // Getter
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
+        this.mailNotificationEnable = mailNotificationEnable;
     }
 
     // Method

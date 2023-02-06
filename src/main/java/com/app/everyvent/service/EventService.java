@@ -20,7 +20,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final AirlineService airlineService;
     private final DestinationService destinationService;
-    private final EventDestinationService eventDestinationService;
+    private final MailService mailService;
 
     public void save(Event event) {
         eventRepository.save(event);
@@ -55,6 +55,7 @@ public class EventService {
                         .forEach(destination -> new EventDestination(event, destination));
             }
             save(event);
+            mailService.sendMail(event);
             newEvents++;
         }
 
