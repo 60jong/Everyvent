@@ -1,10 +1,13 @@
 package com.app.everyvent.domain;
 
 import com.app.everyvent.domain.destination.Destination;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
+@Getter
 @NoArgsConstructor
 @Entity
 public class EventDestination {

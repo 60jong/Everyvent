@@ -39,3 +39,4 @@ application-release.yml
 application-develop.yml
 application-test.yml
 WebCrawlerTest.java
+chromedriver.exe

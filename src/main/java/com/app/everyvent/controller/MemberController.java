@@ -3,16 +3,10 @@ package com.app.everyvent.controller;
 import com.app.everyvent.dto.web.DestinationIds;
 import com.app.everyvent.dto.web.*;
 import com.app.everyvent.domain.Member;
+import com.app.everyvent.service.MailService;
 import com.app.everyvent.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.IOUtils;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -21,6 +15,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final MailService mailService;
 
     /**
      * 멤버 회원가입
@@ -30,9 +25,16 @@ public class MemberController {
      */
     @PostMapping("")
     public NewMemberRes postMember(@RequestBody NewMemberParam newMemberParam) {
-        Member newMember = newMemberParam.toMember();
-        memberService.join(newMember);
 
+        Long newMemberId = memberService.join(
+                newMemberParam.getName(),
+                newMemberParam.getEmail(),
+                newMemberParam.getPassword(),
+                newMemberParam.getPhoneNumber(),
+                newMemberParam.getMailNotificationEnable()
+        );
+
+        Member newMember = memberService.findOne(newMemberId);
         return new NewMemberRes(newMember);
 
     }
@@ -71,13 +73,5 @@ public class MemberController {
     @PostMapping("/{memberId}/destinations")
     public void postMemberDestinations(@PathVariable("memberId") Long memberId, @RequestBody DestinationIds destinationIds) {
         memberService.addDestinations(memberId, destinationIds.getDestinationIds());
-    }
-
-    @GetMapping(value = "/get-image",
-            produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] getImage() throws IOException {
-        InputStream inputStream = new FileInputStream("src/main/resources/tobi.jpg");
-
-        return IOUtils.toByteArray(inputStream);
     }
 }

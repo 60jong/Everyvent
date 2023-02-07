@@ -2,6 +2,7 @@ package com.app.everyvent.repository;
 
 import com.app.everyvent.domain.Member;
 import com.app.everyvent.domain.Subscription;
+import com.app.everyvent.domain.destination.Destination;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -28,6 +29,12 @@ public class MemberRepository {
     public List<Subscription> findSubscriptions(Member member) {
         return em.createQuery("select s from Subscription s where s.member = :member", Subscription.class)
                 .setParameter("member", member)
+                .getResultList();
+    }
+
+    public List<Member> findAllByDestination(Destination destination) {
+        return em.createQuery("select md.member from MemberDestination md where md.destination = :destination", Member.class)
+                .setParameter("destination", destination)
                 .getResultList();
     }
 }

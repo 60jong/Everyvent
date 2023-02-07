@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -20,8 +21,11 @@ public class MemberService {
     private final AirlineService airlineService;
     private final DestinationService destinationService;
 
-    public void join(Member newMember) {
+    public Long join(String name, String email, String password, String phoneNumber, Boolean mailNotificationEnable) {
+        Member newMember = new Member(name, email, password, phoneNumber, mailNotificationEnable);
         memberRepository.save(newMember);
+
+        return newMember.getId();
     }
 
     public Member findOne(Long memberId) {
@@ -46,5 +50,9 @@ public class MemberService {
 
         destinations.stream()
                 .forEach(destination -> new MemberDestination(member, destination));
+    }
+
+    public List<Member> findAllByDestination(Destination destination) {
+        return memberRepository.findAllByDestination(destination);
     }
 }

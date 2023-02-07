@@ -2,6 +2,7 @@ package com.app.everyvent.domain;
 
 
 import com.app.everyvent.domain.airline.Airline;
+import com.app.everyvent.domain.destination.Destination;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -81,5 +83,11 @@ public class Event {
 
     public boolean isTypeOf(EventType eventType) {
         return this.eventType.equals(eventType);
+    }
+
+    public List<Destination> getDestinations() {
+        return this.eventDestinations.stream()
+                .map(eventDestination -> eventDestination.getDestination())
+                .collect(Collectors.toList());
     }
 }
