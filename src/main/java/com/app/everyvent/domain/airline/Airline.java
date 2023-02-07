@@ -9,6 +9,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,6 +27,8 @@ import java.util.List;
 public abstract class Airline {
     public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
     public static String WEB_DRIVER_PATH = "chromedriver.exe";
+    @Value("${crawl.user-agent}")
+    private static String USER_AGENT;
 
     @Id
     @GeneratedValue
@@ -80,11 +85,13 @@ public abstract class Airline {
         System.setProperty(WEB_DRIVER_ID, WEB_DRIVER_PATH);
 
         // WebDriver 옵션 설정
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--start-maximized");
-        options.addArguments("--disable-popup-blocking");
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--headless");
+        chromeOptions.addArguments("--no-sandbox");
+        chromeOptions.addArguments("--disable-dev-shm-usage");
+        chromeOptions.addArguments("--user-agent=" + USER_AGENT);
 
-        return new ChromeDriver(options);
+        return new ChromeDriver(chromeOptions);
     }
 
     public void waitPageLoad() throws InterruptedException {
