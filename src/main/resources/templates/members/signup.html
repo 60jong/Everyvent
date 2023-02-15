@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Flyvent 회원가입</title>
+</head>
+<h1>Flyvent 회원가입</h1>
+<hr/>
+
+<form action="/members/signup" th:object="${newMemberParam}" method="post">
+
+    name : <input type='text' th:field="*{name}"/><br>
+    email : <input type='text' th:field="*{email}"/><br>
+    <input type="checkbox" th:field="*{mailNotificationEnable}"> 메일 수신 동의
+    <br/>
+    password : <input type='password' th:field="*{password}"/><br>
+    phoneNumber : <input type='text' th:field="*{phoneNumber}"/><br>
+
+    <input type='submit' value="회원가입">
+
+</form>
+<body>
+
+</body>
+</html>

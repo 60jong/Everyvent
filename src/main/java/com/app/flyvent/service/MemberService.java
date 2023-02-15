@@ -54,4 +54,8 @@ public class MemberService {
     public List<Member> findAllByDestination(Destination destination) {
         return memberRepository.findAllByDestination(destination);
     }
+
+    public void login(String email, String password) {
+
+    }
 }
