@@ -5,18 +5,17 @@ import com.app.flyvent.dto.web.NewAirlineParam;
 import com.app.flyvent.dto.web.NewAirlineRes;
 import com.app.flyvent.service.AirlineService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/airlines")
 @RequiredArgsConstructor
 public class AirlineController {
     private final AirlineService airlineService;
 
     @PostMapping("/new")
+    @ResponseBody
     public NewAirlineRes postAirline(@RequestBody NewAirlineParam postAirlineReq) {
         Airline airline = postAirlineReq.toAirline();
         airlineService.register(airline);

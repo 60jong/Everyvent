@@ -5,13 +5,18 @@ import com.app.flyvent.dto.web.*;
 import com.app.flyvent.domain.Member;
 import com.app.flyvent.service.MailService;
 import com.app.flyvent.service.MemberService;
+import com.app.flyvent.util.Message;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.MediaType;
+
+import javax.validation.Valid;
 import java.util.List;
+
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 @RequestMapping("/members")
@@ -24,40 +29,45 @@ public class MemberController {
     // 멤버 회원가입 페이지
     @GetMapping("/signup")
     public String getSignupPage(Model model) {
-        model.addAttribute("newMemberParam", new NewMemberParam());
+        model.addAttribute("memberJoinRequest", new MemberJoinRequest());
         return "members/signup";
     }
 
     // 멤버 회원가입
     @PostMapping("/signup")
-    public String postMember(@ModelAttribute("newMemberParam") NewMemberParam newMemberParam) {
-
-        Long newMemberId = memberService.join(
-                newMemberParam.getName(),
-                newMemberParam.getEmail(),
-                newMemberParam.getPassword(),
-                newMemberParam.getPhoneNumber(),
-                newMemberParam.getMailNotificationEnable()
+    public String postMember(
+            @Valid @ModelAttribute("memberJoinRequest") MemberJoinRequest memberJoinRequest,
+            Model model
+    ) {
+        memberService.join(
+                memberJoinRequest.getName(),
+                memberJoinRequest.getEmail(),
+                memberJoinRequest.getPassword(),
+                memberJoinRequest.getPhoneNumber(),
+                memberJoinRequest.getMailNotificationEnable()
         );
 
-        Member newMember = memberService.findOne(newMemberId);
-        return "redirect:/";
+        Message message = new Message("회원가입에 성공했습니다.", "/");
+        return showMessageAndRedirect(message, model);
     }
 
     // 멤버 로그인 페이지
     @GetMapping("/signin")
     public String getSigninPage(Model model) {
-        model.addAttribute("memberSigninParam", new MemberSigninParam());
+        model.addAttribute("memberSigninRequest", new MemberSigninRequest());
         return "members/signin";
     }
 
-    // 멤버 회원가입
-    @PostMapping("/signup")
-    public String signin(@ModelAttribute("memberSigninParam") MemberSigninParam memberSigninParam) {
+    // 멤버 로그인
+    @PostMapping("/signin")
+    public String signin(
+            @ModelAttribute("memberSigninRequest") MemberSigninRequest memberSigninRequest,
+            Model model
+    ) {
+        memberService.login(memberSigninRequest.getEmail(), memberSigninRequest.getPassword());
 
-        memberService.login(memberSigninParam.getEmail(), memberSigninParam.getPassword());
-
-        return "redirect:/";
+        Message message = new Message("로그인에 성공했습니다.", "/");
+        return showMessageAndRedirect(message, model);
     }
 
     /**
@@ -69,7 +79,7 @@ public class MemberController {
     @ResponseBody
     @GetMapping("/{memberId}/subscriptions")
     public SubscribedAirlines getMemberSubscriptions(@PathVariable("memberId") Long memberId) {
-        Member member = memberService.findOne(memberId);
+        Member member = memberService.findById(memberId);
         List<String> airlineEnglishNames = memberService.getAirlineEnglishNames(member);
 
         return new SubscribedAirlines(memberId, airlineEnglishNames);
@@ -95,6 +105,12 @@ public class MemberController {
     @PostMapping(value = "/{memberId}/destinations", produces = MediaType.IMAGE_JPEG_VALUE)
     public void postMemberDestinations(@PathVariable("memberId") Long memberId, @RequestBody DestinationIds destinationIds) {
         memberService.addDestinations(memberId, destinationIds.getDestinationIds());
+    }
+
+    private String showMessageAndRedirect(Message params, Model model) {
+        model.addAttribute("message", params.getMessage());
+        model.addAttribute("redirectUri", params.getRedirectUri());
+        return "util/alertMessage";
     }
 
 //    @GetMapping(

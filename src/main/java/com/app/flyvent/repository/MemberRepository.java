@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MemberRepository {
@@ -18,8 +19,15 @@ public class MemberRepository {
         em.persist(newMember);
     }
 
-    public Member findOne(Long memberId) {
-        return em.find(Member.class, memberId);
+    public Optional<Member> findById(Long memberId) {
+        return Optional.ofNullable(em.find(Member.class, memberId));
+    }
+
+    public Optional<Member> findByEmail(String email) {
+        return em.createQuery("select m from Member m where m.email = :email")
+                .setParameter("email", email)
+                .getResultStream()
+                .findAny();
     }
 
     public void saveSubscription(Subscription subscription) {
