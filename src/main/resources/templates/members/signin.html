@@ -7,7 +7,7 @@
 <h1>Flyvent 로그인</h1>
 <hr/>
 
-<form action="/members/signin" th:object="${memberSigninParam}" method="post">
+<form action="/members/signin" th:object="${memberSigninRequest}" method="post">
 
     email : <input type='text' th:field="*{email}"/><br>
     password : <input type='password' th:field="*{password}"/><br>

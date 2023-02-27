@@ -1,10 +1,13 @@
 package com.app.flyvent.service;
 
+import com.app.flyvent.FlyventApplication;
 import com.app.flyvent.domain.MemberDestination;
 import com.app.flyvent.domain.airline.Airline;
 import com.app.flyvent.domain.Member;
 import com.app.flyvent.domain.Subscription;
 import com.app.flyvent.domain.destination.Destination;
+import com.app.flyvent.exception.FlyventException;
+import com.app.flyvent.exception.FlyventExceptionStatus;
 import com.app.flyvent.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,14 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.app.flyvent.exception.FlyventExceptionStatus.*;
+
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
     private final AirlineService airlineService;
     private final DestinationService destinationService;
 
+    @Transactional
     public Long join(String name, String email, String password, String phoneNumber, Boolean mailNotificationEnable) {
         Member newMember = new Member(name, email, password, phoneNumber, mailNotificationEnable);
         memberRepository.save(newMember);
@@ -27,12 +32,19 @@ public class MemberService {
         return newMember.getId();
     }
 
-    public Member findOne(Long memberId) {
-        return memberRepository.findOne(memberId);
+    public Member findById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new FlyventException(MEMBERS_NO_MATCHING_FOUND));
     }
 
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new FlyventException(MEMBERS_NO_MATCHING_FOUND));
+    }
+
+    @Transactional
     public void subscribe(Long memberId, List<Long> airlineIds) {
-        Member member = findOne(memberId);
+        Member member = findById(memberId);
         List<Airline> airlines = airlineService.findAllById(airlineIds);
 
         airlines.stream()
@@ -43,8 +55,9 @@ public class MemberService {
         return member.getAirlineEnglishNames();
     }
 
+    @Transactional
     public void addDestinations(Long memberId, List<Long> destinationIds) {
-        Member member = findOne(memberId);
+        Member member = findById(memberId);
         List<Destination> destinations = destinationService.findAllById(destinationIds);
 
         destinations.stream()
@@ -55,7 +68,13 @@ public class MemberService {
         return memberRepository.findAllByDestination(destination);
     }
 
+    @Transactional
     public void login(String email, String password) {
+        Member member = findByEmail(email);
 
+        if (!member.getPassword().equals(password)) {
+            throw new FlyventException(MEMBERS_PASSWORD_UNMATCH);
+        }
     }
+
 }

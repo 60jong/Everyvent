@@ -7,7 +7,7 @@
 <h1>Flyvent 회원가입</h1>
 <hr/>
 
-<form action="/members/signup" th:object="${newMemberParam}" method="post">
+<form action="/members/signup" th:object="${memberJoinRequest}" method="post">
 
     name : <input type='text' th:field="*{name}"/><br>
     email : <input type='text' th:field="*{email}"/><br>
