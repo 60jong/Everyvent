@@ -1,0 +1,9 @@
+<html lang="en" xmlns:th="http://www.thmeleaf.org">
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var message = [[${message}]]
+  alert(message);
+  location.replace([[${redirectUri}]]);
+  /*]]>*/
+</script>
